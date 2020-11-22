@@ -154,7 +154,7 @@ public class AdditionScript : MonoBehaviour
             yield return null;
 			if (!Interactable)
 			{
-				yield return "You are not able to interact with the module. The command was not processed.";
+				yield return "sendtochaterror You are not able to interact with the module. The command was not processed.";
 				yield break;
 			}
 			
@@ -170,22 +170,28 @@ public class AdditionScript : MonoBehaviour
             yield return null;
 			if (!Interactable)
 			{
-				yield return "You are not able to interact with the module. The command was not processed.";
+				yield return "sendtochaterror You are not able to interact with the module. The command was not processed.";
+				yield break;
+			}
+			
+			if (parameters.Length != 2)
+			{
+				yield return "sendtochaterror Invalid parameter length. The command was not processed.";
 				yield break;
 			}
 			
 			int Hecks;
 			bool Check = Int32.TryParse(parameters[1], out Hecks);
 			
-			if (parameters[1].Length > 4)
+			if (!Check)
 			{
-				yield return "Number being sent has a length longer than 4. The command was not processed.";
+				yield return "sendtochaterror Number being sent is invalid. The command was not processed.";
 				yield break;
 			}
 			
-			if (!Check)
+			if (parameters[1].Length > 4)
 			{
-				yield return "Number being sent is invalid. The command was not processed.";
+				yield return "sendtochaterror Number being sent has a length longer than 4. The command was not processed.";
 				yield break;
 			}
 			
