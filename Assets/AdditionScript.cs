@@ -98,7 +98,7 @@ public class AdditionScript : MonoBehaviour
 			{
 				if (Type.text == Total.ToString())
 				{
-					Debug.LogFormat("[Addition #{0}] You submitted {1}. That was incorrect. Module solved. ", moduleId, Type.text);
+					Debug.LogFormat("[Addition #{0}] You submitted {1}. That was correct. Module solved. ", moduleId, Type.text);
 					Interactable = false;
 					Cycle.color = Color.white;
 					StartCoroutine(CorrectAnd());
