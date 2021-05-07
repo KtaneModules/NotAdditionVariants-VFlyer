@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using KModkit;
 
 public class AdditionScript : MonoBehaviour
 {
@@ -18,7 +16,7 @@ public class AdditionScript : MonoBehaviour
 	//Logging
     static int moduleIdCounter = 1;
     int moduleId;
-    private bool ModuleSolved;
+    private bool moduleSolved;
 	
 	int[] Heckel = new int[10];
 	int GuideNumber, Total;
@@ -73,7 +71,7 @@ public class AdditionScript : MonoBehaviour
 	void PressNumber(int Number)
 	{
 		Keys[Number].AddInteractionPunch(.2f);
-		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, Keys[Number].transform);
 		if (Interactable)
 		{
 			if (Type.text.Length != 4)
@@ -86,7 +84,7 @@ public class AdditionScript : MonoBehaviour
 	void PressUtility(int NumberU)
 	{
 		UtilityButtons[NumberU].AddInteractionPunch(.2f);
-		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, UtilityButtons[NumberU].transform);
 		if (Interactable)
 		{
 			if (NumberU == 0)
@@ -139,6 +137,7 @@ public class AdditionScript : MonoBehaviour
 		Cycle.text = "";
 		Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
 		Module.HandlePass();
+		moduleSolved = true;
 	}
 	
 	//twitch plays
@@ -204,5 +203,27 @@ public class AdditionScript : MonoBehaviour
 			yield return "solve";
 			UtilityButtons[1].OnInteract();
         }
+	}
+
+	IEnumerator TwitchHandleForcedSolve()
+    {
+		string ans = Total.ToString();
+		for (int i = 0; i < Type.text.Length; i++)
+        {
+			if (Type.text[i] != ans[i])
+            {
+				UtilityButtons[0].OnInteract();
+				yield return new WaitForSecondsRealtime(.25f);
+				break;
+			}
+        }
+		int start = Type.text.Length;
+		for (int i = start; i < ans.Length; i++)
+        {
+			Keys[Int32.Parse(ans[i].ToString())].OnInteract();
+			yield return new WaitForSecondsRealtime(.25f);
+		}
+		UtilityButtons[1].OnInteract();
+		while (!moduleSolved) yield return true;
 	}
 }
