@@ -11,12 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
   m_Name: ModConfig
   m_EditorClassIdentifier: 
-  id: Addition
-  title: Addition
-  author: BigCrunch22
-  description: "\"This is literally just addition. I have no idea why anybody thought
-    that this would be fun, challenging, or interesting to put on a bomb.\r\"\n\r\nIdea
-    - Panoptes (Mirage Xel)\r\nImplementor - BigCrunch22\r\n\r\nTP Supported!\r\n\r\nIf
+  id: MultiplicationMod
+  title: Multiplication
+  author: VFlyer
+  description: "\"Honestly, this is literally just multiplying 3 digit numbers. I
+    have no idea why anybody thought that this would be fun, challenging, or interesting
+    to put on a bomb.\r\"\n\r\nSuggested by Deaf\nImplemented by VFlyer\nAddition
+    Prefab by BigCrunch22\nOriginal Addition Idea by PANOPTES\n\r\nTP Supported!\r\n\r\nIf
     someone wants to add TP Support/Logging/Anything useful, you have my approval
     for that."
   version: 1.0
