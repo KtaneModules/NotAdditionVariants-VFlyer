@@ -125,8 +125,8 @@ public class MultiplicationScript : MonoBehaviour {
     }
 	void ResetModule()
 	{
-		numbers = Enumerable.Range(990, 10).ToArray();
-		//numbers = Enumerable.Range(100, 900).ToArray().Shuffle().Take(cntNums).ToArray();
+		//numbers = Enumerable.Range(990, 10).ToArray();
+		numbers = Enumerable.Range(100, 900).ToArray().Shuffle().Take(cntNums).ToArray();
 		var convertedInitialNumbers = new int[cntNums][];
 		QuickLog("Displayed numbers: {0}", numbers.Join());
 		
