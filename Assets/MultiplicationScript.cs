@@ -91,9 +91,7 @@ public class MultiplicationScript : MonoBehaviour {
 		subSelect.AddInteractionPunch(.2f);
 		mAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, subSelect.transform);
 		var curText = inputDisplay.text;
-		var rgxStart0 = Regex.Match(curText, "^0+[1-9]");
-		if (rgxStart0.Success)
-			curText = curText.Substring(rgxStart0.Value.Length - 1);
+		curText = curText.TrimStart('0');
 		if (curText.Length == 0)
 			curText = "0";
 		if (curText == expectedValue)
@@ -196,7 +194,7 @@ public class MultiplicationScript : MonoBehaviour {
 	IEnumerator ProcessTwitchCommand(string command)
 	{
 		var intCmd = command.Trim();
-		var rgxMatchCycle = Regex.Match(intCmd, @"^cycle(\s(slow(er)?|fast(er)))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+		var rgxMatchCycle = Regex.Match(intCmd, @"^cycle(\s(slow(er)?|fast(er)?))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 		var rgxSubDigits = Regex.Match(intCmd, @"^submit\s[0-9]+$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 		if (rgxMatchCycle.Success)
 		{
