@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-public class MultiplicationScript : MonoBehaviour {
+public class DivisionScript : MonoBehaviour {
 
 	public KMAudio mAudio;
 	public KMBombModule modSelf;
@@ -22,27 +22,26 @@ public class MultiplicationScript : MonoBehaviour {
 	const string digits = "0123456789";
 
 	void QuickLog(string toLog, params object[] args)
-    {
+	{
 		Debug.LogFormat("[{0} #{1}] {2}", modSelf.ModuleDisplayName, moduleID, string.Format(toLog, args));
-    }
+	}
 	void QuickLogDebug(string toLog, params object[] args)
-    {
+	{
 		Debug.LogFormat("<{0} #{1}> {2}", modSelf.ModuleDisplayName, moduleID, string.Format(toLog, args));
-    }
-
+	}
 	// Use this for initialization
 	void Start () {
 		moduleID = ++modIDCnt;
 		ResetModule();
-        for (var x = 0; x < digitsSelectable.Length; x++)
-        {
+		for (var x = 0; x < digitsSelectable.Length; x++)
+		{
 			var y = x;
 			digitsSelectable[x].OnInteract += delegate {
 				if (interactable && !moduleSolved)
 					HandleDigitPress(y);
 				return false;
 			};
-        }
+		}
 		subSelect.OnInteract += delegate {
 			if (interactable && !moduleSolved)
 				HandleSubmitPress();
@@ -70,106 +69,91 @@ public class MultiplicationScript : MonoBehaviour {
 		};
 	}
 	void HandleCurCycle()
-    {
+	{
 		mainDisplay.text = numbers[idxCycle].ToString();
 		mainDisplay.color = idxCycle == 0 ? Color.gray : Color.white;
 		mainDisplay.characterSize = 0.002f + 0.001f * (idxCycle / 9f);
 	}
-
-	void HandleDigitPress(int idx)
+	void ResetModule()
+	{
+		//numbers = Enumerable.Range(990, 10).ToArray();
+		numbers = Enumerable.Range(100, 900).ToArray().Shuffle().Take(cntNums).ToArray();
+		QuickLog("Displayed numbers: {0}", numbers.Join());
+		var curDividendVal = numbers.First();
+		var outputList = new List<int>();
+		while (curDividendVal > 0)
+		{
+			outputList.Add(curDividendVal % 10);
+			curDividendVal /= 10;
+		}
+		outputList.Reverse();
+		while (outputList.First() == 0)
+			outputList.RemoveAt(0);
+        for (var x = 1; x < cntNums; x++)
+        {
+			outputList = HandleLongDivisionNonZeroStart(outputList, numbers[x], 32 - 2 * x);
+			QuickLogDebug("{1}: [{0}]", outputList.Join(" "), x);
+		}
+		expectedValue = outputList.Take(10).Join("");
+		QuickLog("Expected value to submit: {0}", expectedValue);
+		HandleCurCycle();
+	}
+	List<int> HandleLongDivisionNonZeroStart(IEnumerable<int> dividendArray, int divisor, int precision = 30)
     {
+		var curAmount = dividendArray.FirstOrDefault();
+		var output = new List<int>();
+		var pointerDivArray = 1;
+		var nonZeroDetected = false;
+		if (divisor != 0)
+        {
+			while (output.Count < precision)
+            {
+
+				if (curAmount >= divisor)
+                {
+					var quotient = curAmount / divisor;
+					if (quotient != 0 || nonZeroDetected)
+					{
+						nonZeroDetected = true;
+						output.Add(quotient);
+					}
+					curAmount %= divisor;
+				}
+				else if (nonZeroDetected || curAmount == 0)
+					output.Add(0);
+				curAmount = curAmount * 10 + dividendArray.ElementAtOrDefault(pointerDivArray);
+				pointerDivArray++;
+            }
+        }
+		return output;
+    }
+	void HandleDigitPress(int idx)
+	{
 		digitsSelectable[idx].AddInteractionPunch(.2f);
 		mAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, digitsSelectable[idx].transform);
 		var curText = inputDisplay.text;
-		if (curText.Length < 30)
+		if (curText.Length < 10)
 			curText += idx.ToString();
 		inputDisplay.text = curText;
-		inputDisplay.characterSize = 0.002f - Mathf.Clamp((curText.Length - 19) * 0.000125f, 0, 0.00075f);
-    }
+	}
 	void HandleSubmitPress()
-    {
+	{
 		subSelect.AddInteractionPunch(.2f);
 		mAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, subSelect.transform);
-		var curText = inputDisplay.text;
-		curText = curText.TrimStart('0');
-		if (curText.Length == 0)
-			curText = "0";
+		var curText = inputDisplay.text.TrimStart('0');
 		if (curText == expectedValue)
-        {
+		{
 			QuickLog("Expected value correctly submitted.");
 			interactable = false;
 			StartCoroutine(CorrectAnim());
 		}
 		else
-        {
+		{
 			QuickLog("Incorrect value submitted: \"{0}\" Starting over.", curText);
 			modSelf.HandleStrike();
 			ResetModule();
 			inputDisplay.text = "";
-        }
-	}
-	int[] HandlePolyMultiplcation(int[] arrayA, int[] arrayB)
-    {
-		if (arrayA.Length == 0) return arrayB;
-		else if (arrayB.Length == 0) return arrayA;
-		var output = new int[arrayA.Length + arrayB.Length - 1];
-		for (var x = 0; x < arrayB.Length; x++)
-		{
-			for (var y = 0; y < arrayA.Length; y++)
-				output[x + y] += arrayA[y] * arrayB[x];
 		}
-		return output;
-    }
-	void ResetModule()
-	{
-		//numbers = Enumerable.Range(990, 10).ToArray();
-		numbers = Enumerable.Range(100, 900).ToArray().Shuffle().Take(cntNums).ToArray();
-		var convertedInitialNumbers = new int[cntNums][];
-		QuickLog("Displayed numbers: {0}", numbers.Join());
-		
-		for (var x = 0; x < cntNums; x++)
-		{
-			var polyRepresent = new int[3];
-			var controlModulus = new[] { 1, 10, 100 };
-			for (var y = 0; y < 3; y++)
-				polyRepresent[y] = numbers[x] / controlModulus[y] % 10;
-			convertedInitialNumbers[x] = polyRepresent;
-		}
-		var bigValue = convertedInitialNumbers[0].ToArray();
-		QuickLogDebug("[{0}]", convertedInitialNumbers.Select(a => a.Join()).Join("];["));
-		for (var x = 1; x < cntNums; x++)
-		{
-			//QuickLogDebug("[{0}]", bigValue.Join(" "));
-			bigValue = HandlePolyMultiplcation(bigValue, convertedInitialNumbers[x]);
-			for (var y = 0; y < bigValue.Length - 1; y++)
-			{
-				if (bigValue[y] > 9)
-				{
-					bigValue[y + 1] += bigValue[y] / 10;
-					bigValue[y] %= 10;
-				}
-			}
-			var lastPolyVal = bigValue.Last();
-			if (lastPolyVal > 9)
-            {
-				var digitCntLastPoly = lastPolyVal.ToString().Length;
-
-				var newBigArray = new int[bigValue.Length + digitCntLastPoly - 1];
-				for (var y = 0; y < bigValue.Length - 1; y++)
-					newBigArray[y] = bigValue[y];
-                for (var y = 0; y < digitCntLastPoly; y++)
-                {
-					newBigArray[bigValue.Length - 1 + y] = lastPolyVal % 10;
-					lastPolyVal /= 10;
-                }
-				bigValue = newBigArray;
-			}				
-			QuickLogDebug("[{0}]", bigValue.Join(" "));
-		}
-		expectedValue = bigValue.Reverse().Join("");
-		QuickLog("Expected value to submit: {0}", expectedValue);
-		idxCycle = 0;
-		HandleCurCycle();
 	}
 	IEnumerator CorrectAnim()
 	{
@@ -205,15 +189,15 @@ public class MultiplicationScript : MonoBehaviour {
 			var valCycle = rgxMatchCycle.Value.Split();
 			var curDelay = 1f;
 			if (valCycle.Length > 1)
-            {
+			{
 				switch (valCycle.Last())
-                {
+				{
 					case "slow": curDelay = 2f; break;
 					case "slower": curDelay = 3f; break;
 					case "fast": curDelay = 0.75f; break;
 					case "faster": curDelay = 0.5f; break;
-                }
-            }
+				}
+			}
 
 			yield return null;
 			for (int x = 0; x < 10; x++)
@@ -232,7 +216,7 @@ public class MultiplicationScript : MonoBehaviour {
 			var valueMatched = rgxSubDigits.Value.Split().Last();
 			if (valueMatched.Length > 30)
 			{
-				yield return "sendtochaterror Number being sent has a length longer than 30. The answer can never contain more than 30 digits.";
+				yield return "sendtochaterror Number being sent has a length longer than 30. The command was not processed.";
 				yield break;
 			}
 			yield return null;

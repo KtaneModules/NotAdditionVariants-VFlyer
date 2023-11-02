@@ -11,15 +11,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
   m_Name: ModConfig
   m_EditorClassIdentifier: 
-  id: MultiplicationMod
-  title: Multiplication
+  id: NotAdditionMod
+  title: Not Addition Modules
   author: VFlyer
-  description: "\"Honestly, this is literally just multiplying 3 digit numbers. I
-    have no idea why anybody thought that this would be fun, challenging, or interesting
-    to put on a bomb.\r\"\n\r\nSuggested by Deaf\nImplemented by VFlyer\nAddition
-    Prefab by BigCrunch22\nOriginal Addition Idea by PANOPTES\n\r\nTP Supported!\r\n\r\nIf
-    someone wants to add TP Support/Logging/Anything useful, you have my approval
-    for that."
+  description: "\"Honestly, this is literally just performing the same operation to
+    that many 3 digit numbers. Do I really need to say more?\"\nA collection of 3
+    variants of Addition suggested by Deaf.\nContains Multiplication, Division, Subtraction.\nModule
+    IDs:\nDivision: DivisionModule\nMultiplication: MultiplicationModule\nSubtraction:
+    SubtractionModule\n\nImplemented by VFlyer\nAddition Prefab by BigCrunch22\nAddition
+    Idea by PANOPTES\n\r\nTP Supported!\r\n\r\nIf someone wants to add TP Support/Logging/Anything
+    useful, you have my approval for that."
   version: 1.0
   outputFolder: build
   previewImage: {fileID: 2800000, guid: a9e855f3cd796ab48ae2623ccd8828a7, type: 3}
