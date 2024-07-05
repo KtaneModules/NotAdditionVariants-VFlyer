@@ -1,0 +1,15 @@
+{
+  "Compatibility": "Compatible",
+  "Contributors": { "Developer": [ "VFlyer" ] },
+  "DefuserDifficulty": "Easy",
+  "Description": "Subtract 10 numbers together, and submit its result, while making sure the obtained value is positive.",
+  "ExpertDifficulty": "Easy",
+  "ModuleID": "SubtractionModule",
+  "Name": "Subtraction",
+  "Origin": "Mods",
+  "Published": "2023-11-01",
+  "SortKey": "SUBTRACTION",
+  "SourceUrl": "https://github.com/VFlyer/NotAdditionVariants",
+  "SteamID": "3069322999",
+  "Type": "Regular"
+}

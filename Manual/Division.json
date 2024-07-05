@@ -1,0 +1,15 @@
+{
+  "Compatibility": "Compatible",
+  "Contributors": { "Developer": [ "VFlyer" ] },
+  "DefuserDifficulty": "Easy",
+  "Description": "Divide 10 numbers together, and submit the first 10 digits of the result after removing the decimal point and leading 0s.",
+  "ExpertDifficulty": "Easy",
+  "ModuleID": "DivisionModule",
+  "Name": "Division",
+  "Origin": "Mods",
+  "Published": "2023-11-01",
+  "SortKey": "DIVISION",
+  "SourceUrl": "https://github.com/VFlyer/NotAdditionVariants",
+  "SteamID": "3069322999",
+  "Type": "Regular"
+}
